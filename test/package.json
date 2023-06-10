@@ -17,6 +17,6 @@
     "vitest": "^0.30.1"
   },
   "dependencies": {
-    "cherrylend-offchain": "file:../cherrylend-offchain-0.0.1.tgz"
+    "linear-vesting-offchain": "file:../linear-vesting-offchain-0.0.1.tgz"
   }
 }

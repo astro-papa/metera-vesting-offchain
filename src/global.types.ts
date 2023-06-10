@@ -13,7 +13,7 @@ export type AssetClass = {
   tokenName: string;
 };
 
-export type LockVestingTokensConfig = {
+export type LockTokensConfig = {
   beneficiary: Address;
   vestingAsset: AssetClass;
   totalVestingQty: number;
@@ -27,7 +27,7 @@ export type LockVestingTokensConfig = {
   };
 };
 
-export type CollectPartialVesting = {
+export type CollectPartialConfig = {
   vestingUTXO: UTxO;
   scripts: {
     vesting: CborHex;
