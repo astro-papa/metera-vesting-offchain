@@ -5,7 +5,7 @@ import {
   toUnit,
   TxComplete,
 } from "lucid-cardano";
-import { divCeil, toAddress } from "../core/utils/utils.js";
+import { divCeil, parseSafeDatum, toAddress } from "../core/utils/utils.js";
 import { CollectPartialConfig, Result } from "../core/types.js";
 import { VestingRedeemer, VestingDatum } from "../core/contract.types.js";
 
@@ -23,21 +23,25 @@ export const collectPartial = async (
   const vestingValidatorAddress =
     lucid.utils.validatorToAddress(vestingValidator);
 
-  if (!config.vestingUTXO)
+  const vestingUTXO = (await lucid.utxosByOutRef([config.vestingOutRef]))[0];
+
+  if (!vestingUTXO)
     return { type: "error", error: new Error("No Utxo in Script") };
 
-  if (!config.vestingUTXO.datum)
+  if (!vestingUTXO.datum)
     return { type: "error", error: new Error("Missing Datum") };
-  const datum = Data.from(config.vestingUTXO.datum, VestingDatum);
 
-  const vestingPeriodLength = datum.vestingPeriodEnd - datum.vestingPeriodStart;
+  const datum = parseSafeDatum(lucid,vestingUTXO.datum,VestingDatum)
+  if (datum.type == "left") return {type: "error", error: new Error(datum.value)}
+
+  const vestingPeriodLength = datum.value.vestingPeriodEnd - datum.value.vestingPeriodStart;
 
   const vestingTimeRemaining =
-    datum.vestingPeriodEnd - BigInt(config.currentTime);
+    datum.value.vestingPeriodEnd - BigInt(config.currentTime);
 
   const timeBetweenTwoInstallments = divCeil(
     vestingPeriodLength,
-    datum.totalInstallments
+    datum.value.totalInstallments
   );
 
   const futureInstallments = divCeil(
@@ -46,31 +50,31 @@ export const collectPartial = async (
   );
 
   const expectedRemainingQty = divCeil(
-    futureInstallments * datum.totalVestingQty,
-    datum.totalInstallments
+    futureInstallments * datum.value.totalVestingQty,
+    datum.value.totalInstallments
   );
 
-  const vestingTokenUnit = datum.assetClass.symbol
-    ? toUnit(datum.assetClass.symbol, datum.assetClass.name)
+  const vestingTokenUnit = datum.value.assetClass.symbol
+    ? toUnit(datum.value.assetClass.symbol, datum.value.assetClass.name)
     : "lovelace";
 
   const vestingTokenAmount =
-    config.vestingUTXO.assets[vestingTokenUnit] - expectedRemainingQty;
+    vestingUTXO.assets[vestingTokenUnit] - expectedRemainingQty;
 
-  const beneficiaryAddress = toAddress(datum.beneficiary, lucid);
+  const beneficiaryAddress = toAddress(datum.value.beneficiary, lucid);
 
   const vestingRedeemer = Data.to("PartialUnlock", VestingRedeemer);
 
   try {
     const tx = await lucid
       .newTx()
-      .collectFrom([config.vestingUTXO], vestingRedeemer)
+      .collectFrom([vestingUTXO], vestingRedeemer)
       .payToAddress(beneficiaryAddress, {
         [vestingTokenUnit]: vestingTokenAmount,
       })
       .payToContract(
         vestingValidatorAddress,
-        { inline: Data.to(datum, VestingDatum) },
+        { inline: Data.to(datum.value, VestingDatum) },
         { [vestingTokenUnit]: expectedRemainingQty }
       )
       .validFrom(config.currentTime)

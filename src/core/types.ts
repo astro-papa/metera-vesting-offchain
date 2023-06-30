@@ -1,4 +1,4 @@
-import { Address, UTxO } from "lucid-cardano";
+import { Address, Assets, OutRef, UTxO } from "lucid-cardano";
 
 export type CborHex = string;
 export type RawHex = string;
@@ -7,6 +7,10 @@ export type POSIXTime = number;
 export type Result<T> =
   | { type: "ok"; data: T }
   | { type: "error"; error: Error };
+
+export type Either<L, R> =
+  | { type: "left"; value: L }
+  | { type: "right"; value: R };
 
 export type AssetClass = {
   policyId: string;
@@ -25,12 +29,20 @@ export type LockTokensConfig = {
   scripts: {
     vesting: CborHex;
   };
+  userAddress: Address;
 };
 
 export type CollectPartialConfig = {
-  vestingUTXO: UTxO;
+  vestingOutRef: OutRef;
   scripts: {
     vesting: CborHex;
   };
+  userAddress: Address;
   currentTime?: POSIXTime;
+};
+
+export type ReadableUTxO<T> = {
+  outRef: OutRef;
+  datum: T;
+  assets: Assets;
 };
