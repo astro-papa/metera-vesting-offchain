@@ -7,7 +7,7 @@ import {
   Lucid,
   SpendingValidator,
 } from "lucid-cardano";
-import * as D from "../endpoints/contract.types.js";
+import { AddressD } from "../../index.js";
 
 export const divCeil = (a: bigint, b: bigint) => {
   return 1n + (a - 1n) / b;
@@ -40,7 +40,7 @@ export const utxosAtScript = async (lucid: Lucid, script: string) => {
   return lucid.utxosAt(scriptValidatorAddr);
 };
 
-export function fromAddress(address: Address): D.Address {
+export function fromAddress(address: Address): AddressD {
   // We do not support pointer addresses!
 
   const { paymentCredential, stakeCredential } = getAddressDetails(address);
@@ -68,7 +68,7 @@ export function fromAddress(address: Address): D.Address {
   };
 }
 
-export function toAddress(address: D.Address, lucid: Lucid): Address {
+export function toAddress(address: AddressD, lucid: Lucid): Address {
   const paymentCredential = (() => {
     if ("PublicKeyCredential" in address.paymentCredential) {
       return lucid.utils.keyHashToCredential(

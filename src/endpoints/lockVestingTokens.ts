@@ -6,9 +6,9 @@ import {
   TxComplete,
   toUnit,
 } from "lucid-cardano";
-import { fromAddress } from "../common/utils.js";
-import { LockTokensConfig, Result } from "../global.types.js";
-import { VestingDatum } from "./contract.types.js";
+import { fromAddress } from "../core/utils/utils.js";
+import { LockTokensConfig, Result } from "../core/types.js";
+import { VestingDatum } from "../core/contract.types.js";
 
 export const lockTokens = async (
   lucid: Lucid,

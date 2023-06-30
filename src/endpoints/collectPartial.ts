@@ -5,9 +5,9 @@ import {
   toUnit,
   TxComplete,
 } from "lucid-cardano";
-import { divCeil, toAddress } from "../common/utils.js";
-import { CollectPartialConfig, Result } from "../global.types.js";
-import { VestingRedeemer, VestingDatum } from "./contract.types.js";
+import { divCeil, toAddress } from "../core/utils/utils.js";
+import { CollectPartialConfig, Result } from "../core/types.js";
+import { VestingRedeemer, VestingDatum } from "../core/contract.types.js";
 
 export const collectPartial = async (
   lucid: Lucid,
@@ -50,11 +50,9 @@ export const collectPartial = async (
     datum.totalInstallments
   );
 
-  const vestingTokenUnit = datum.assetClass.symbol ? toUnit(
-    datum.assetClass.symbol,
-    datum.assetClass.name
-  ) :
-    "lovelace"
+  const vestingTokenUnit = datum.assetClass.symbol
+    ? toUnit(datum.assetClass.symbol, datum.assetClass.name)
+    : "lovelace";
 
   const vestingTokenAmount =
     config.vestingUTXO.assets[vestingTokenUnit] - expectedRemainingQty;

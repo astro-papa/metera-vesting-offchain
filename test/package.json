@@ -7,7 +7,7 @@
   "scripts": {
     "install-packages": "cd .. && npm run repack && cd test && rm -rf node_modules && rm -f package-lock.json && npm i",
     "test": "npm run install-packages && vitest run",
-    "test:vitest": "vitest run"
+    "vitest": "vitest run"
   },
   "keywords": [],
   "author": "",
