@@ -6,14 +6,18 @@ import {
   TxComplete,
   toUnit,
 } from "lucid-cardano";
-import { fromAddress } from "../common/utils.js";
-import { LockVestingTokensConfig, Result } from "../global.types.js";
-import { VestingDatum } from "./contract.types.js";
+import { fromAddress } from "../core/utils/utils.js";
+import { LockTokensConfig, Result } from "../core/types.js";
+import { VestingDatum } from "../core/contract.types.js";
 
-export const lockVestingTokensConfig = async (
+export const lockTokens = async (
   lucid: Lucid,
-  config: LockVestingTokensConfig
+  config: LockTokensConfig
 ): Promise<Result<TxComplete>> => {
+
+  lucid.selectWalletFrom({address: config.userAddress})
+
+
   const walletUtxos = await lucid.wallet.getUtxos();
 
   if (!walletUtxos.length)
@@ -30,7 +34,7 @@ export const lockVestingTokensConfig = async (
       beneficiary: fromAddress(config.beneficiary),
       assetClass: {
         symbol: config.vestingAsset.policyId,
-        name: config.vestingAsset.tokenName,
+        name: fromText(config.vestingAsset.tokenName),
       },
       totalVestingQty: BigInt(config.totalVestingQty),
       vestingPeriodStart: BigInt(config.vestingPeriodStart),
@@ -42,11 +46,12 @@ export const lockVestingTokensConfig = async (
     VestingDatum
   );
 
-
-  const unit = toUnit(
-    config.vestingAsset.policyId,
-    config.vestingAsset.tokenName
-  );
+  const unit = config.vestingAsset.policyId
+    ? toUnit(
+        config.vestingAsset.policyId,
+        fromText(config.vestingAsset.tokenName)
+      )
+    : "lovelace";
 
   try {
     const tx = await lucid

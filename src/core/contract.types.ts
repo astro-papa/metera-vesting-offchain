@@ -5,7 +5,8 @@ export const OutputReferenceSchema = Data.Object({
   outputIndex: Data.Integer(),
 });
 export type OutputReference = Data.Static<typeof OutputReferenceSchema>;
-// export const OutputReference = OutputReferenceSchema as unknown as OutputReference;
+export const OutputReference =
+  OutputReferenceSchema as unknown as OutputReference;
 
 export const CredentialSchema = Data.Enum([
   Data.Object({
@@ -19,8 +20,8 @@ export const CredentialSchema = Data.Enum([
     ]),
   }),
 ]);
-export type Credential = Data.Static<typeof CredentialSchema>;
-// export const Credential = CredentialSchema as unknown as Credential
+export type CredentialD = Data.Static<typeof CredentialSchema>;
+export const CredentialD = CredentialSchema as unknown as CredentialD;
 
 export const AddressSchema = Data.Object({
   paymentCredential: CredentialSchema,
@@ -39,8 +40,8 @@ export const AddressSchema = Data.Object({
     ])
   ),
 });
-export type Address = Data.Static<typeof AddressSchema>;
-// export const Address = AddressSchema as unknown as Address
+export type AddressD = Data.Static<typeof AddressSchema>;
+export const AddressD = AddressSchema as unknown as AddressD;
 
 //NOTE: liqwid-plutarch-extra AssetClass version, not PlutusLedgerApi.V1.Value
 export const AssetClassSchema = Data.Object(
@@ -50,8 +51,8 @@ export const AssetClassSchema = Data.Object(
   },
   { hasConstr: false }
 );
-export type AssetClass = Data.Static<typeof AssetClassSchema>;
-export const AssetClass = AssetClassSchema as unknown as AssetClass;
+export type AssetClassD = Data.Static<typeof AssetClassSchema>;
+export const AssetClassD = AssetClassSchema as unknown as AssetClassD;
 
 // List [B "test",B "tn"]
 
@@ -60,7 +61,7 @@ export const ValueSchema = Data.Map(
   Data.Map(Data.Bytes(), Data.Bytes())
 );
 export type Value = Data.Static<typeof ValueSchema>;
-// export const Value = ValueSchema as unknown as Value
+export const Value = ValueSchema as unknown as Value;
 
 export const VestingDatumSchema = Data.Object({
   beneficiary: AddressSchema,
@@ -81,5 +82,6 @@ export const VestingRedeemerSchema = Data.Enum([
   Data.Literal("PartialUnlock"),
   Data.Literal("FullUnlock"),
 ]);
-export type VestingRedeemer = Data.Static<typeof VestingRedeemerSchema>
-export const VestingRedeemer = VestingRedeemerSchema as unknown as VestingRedeemer
+export type VestingRedeemer = Data.Static<typeof VestingRedeemerSchema>;
+export const VestingRedeemer =
+  VestingRedeemerSchema as unknown as VestingRedeemer;
