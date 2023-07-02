@@ -8,7 +8,6 @@ import {
   getAddressDetails,
   Lucid,
   SpendingValidator,
-  UTxO,
 } from "lucid-cardano";
 import { AddressD } from "../contract.types.js";
 import { Either, ReadableUTxO, Result } from "../types.js";
@@ -35,7 +34,7 @@ export const utxosAtScript = async (
 
 export const parseSafeDatum = <T>(
   lucid: Lucid,
-  datum: string | null | undefined ,
+  datum: string | null | undefined,
   datumType: T
 ): Either<string, T> => {
   if (datum) {

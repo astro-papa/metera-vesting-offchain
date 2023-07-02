@@ -62,11 +62,12 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   users,
   emulator,
 }) => {
+
   const lockVestingConfig: LockTokensConfig = {
     beneficiary: users.account2.address,
     vestingAsset: {
-      policyId: "",
-      tokenName: "",
+      policyId: "2c04fa26b36a376440b0615a7cdf1a0c2df061df89c8c055e2650505",
+      tokenName: "63425443",
     },
     totalVestingQty: 10_000_000,
     vestingPeriodStart: emulator.now(),
@@ -81,6 +82,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   };
 
   const lockVestingUnSigned = await lockTokens(lucid, lockVestingConfig);
+  // console.log("lockVestingUnSigned", lockVestingUnSigned)
   expect(lockVestingUnSigned.type).toBe("ok");
   if (lockVestingUnSigned.type == "ok") {
     lucid.selectWalletFromSeed(users.account1.seedPhrase);
@@ -118,7 +120,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     collectPartialConfig1
   );
 
-  // console.log(collectPartialUnsigned);
+  // console.log(collectPartialUnsigned1);
   expect(collectPartialUnsigned1.type).toBe("ok");
 
   if (collectPartialUnsigned1.type == "error") return;
@@ -226,7 +228,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     collectPartialConfig4
   );
 
-  console.log(collectPartialUnsigned4);
+  // console.log(collectPartialUnsigned4);
   expect(collectPartialUnsigned4.type).toBe("ok");
 
   if (collectPartialUnsigned4.type == "error") return;

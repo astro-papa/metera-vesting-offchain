@@ -13,6 +13,7 @@ export const collectPartial = async (
   lucid: Lucid,
   config: CollectPartialConfig
 ): Promise<Result<TxComplete>> => {
+
   config.currentTime ??= Date.now();
 
   lucid.selectWalletFrom({ address: config.userAddress });
@@ -42,57 +43,53 @@ export const collectPartial = async (
 
   const vestingTimeRemaining =
     datum.value.vestingPeriodEnd - BigInt(config.currentTime);
-  console.log("vestingTimeRemaining", vestingTimeRemaining);
+  // console.log("vestingTimeRemaining", vestingTimeRemaining);
 
   const timeBetweenTwoInstallments = divCeil(
     vestingPeriodLength,
     datum.value.totalInstallments
   );
-  console.log("timeBetweenTwoInstallments", timeBetweenTwoInstallments);
+  // console.log("timeBetweenTwoInstallments", timeBetweenTwoInstallments);
 
   const futureInstallments = divCeil(
     vestingTimeRemaining,
     timeBetweenTwoInstallments
   );
-  console.log("futureInstallments", futureInstallments);
+  // console.log("futureInstallments", futureInstallments);
 
   const expectedRemainingQty = divCeil(
     futureInstallments * datum.value.totalVestingQty,
     datum.value.totalInstallments
   );
-  console.log("expectedRemainingQty", expectedRemainingQty);
+  // console.log("expectedRemainingQty", expectedRemainingQty);
 
   const vestingTokenUnit = datum.value.assetClass.symbol
     ? toUnit(datum.value.assetClass.symbol, datum.value.assetClass.name)
     : "lovelace";
 
   const vestingTokenAmount =
-    vestingTimeRemaining < 0
+    vestingTimeRemaining < 0n
       ? expectedRemainingQty
       : vestingUTXO.assets[vestingTokenUnit] - expectedRemainingQty;
-
-  console.log("vestingTokenAmount", vestingTokenAmount);
+  // console.log("vestingTokenAmount", vestingTokenAmount);
 
   const beneficiaryAddress = toAddress(datum.value.beneficiary, lucid);
 
-  //TODO: add a check if deadline is pass then add full unlock
   const vestingRedeemer =
-    vestingTimeRemaining < 0
+    vestingTimeRemaining < 0n
       ? Data.to("FullUnlock", VestingRedeemer)
       : Data.to("PartialUnlock", VestingRedeemer);
 
   //NOTE:
   //https://github.com/input-output-hk/plutus-apps/blob/2ef232c253e4f10fef7c339ac6366ba9125182be/plutus-ledger/src/Ledger/Slot.hs#L60-L63
   //if Closure is true then inclusive, it means the posixtime is included otherweise if not substract -1
-  //emulator set this in TX, not sure why they both shuold be inclusive
+  //emulator sets LowerBound inclusive and UpperBound not inclusive
   //PLowerBound [_0 = (PFinite [_0 = (PPOSIXTime 1688213154353)]), _1 = PTrue]
 
-  const upperBound = config.currentTime + 100_000;
-  console.log("upperBound", upperBound);
+  const upperBound = config.currentTime + 3_000;
 
-  //TODO: add full unlock if deadline is passed
   try {
-    if (vestingTimeRemaining < 0) {
+    if (vestingTimeRemaining < 0n) {
       const tx = await lucid
         .newTx()
         .collectFrom([vestingUTXO], vestingRedeemer)
