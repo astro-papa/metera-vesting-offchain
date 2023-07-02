@@ -43,25 +43,25 @@ export const collectPartial = async (
 
   const vestingTimeRemaining =
     datum.value.vestingPeriodEnd - BigInt(config.currentTime);
-  // console.log("vestingTimeRemaining", vestingTimeRemaining);
+  console.log("vestingTimeRemaining", vestingTimeRemaining);
 
   const timeBetweenTwoInstallments = divCeil(
     vestingPeriodLength,
     datum.value.totalInstallments
   );
-  // console.log("timeBetweenTwoInstallments", timeBetweenTwoInstallments);
+  console.log("timeBetweenTwoInstallments", timeBetweenTwoInstallments);
 
   const futureInstallments = divCeil(
     vestingTimeRemaining,
     timeBetweenTwoInstallments
   );
-  // console.log("futureInstallments", futureInstallments);
+  console.log("futureInstallments", futureInstallments);
 
   const expectedRemainingQty = divCeil(
     futureInstallments * datum.value.totalVestingQty,
     datum.value.totalInstallments
   );
-  // console.log("expectedRemainingQty", expectedRemainingQty);
+  console.log("expectedRemainingQty", expectedRemainingQty);
 
   const vestingTokenUnit = datum.value.assetClass.symbol
     ? toUnit(datum.value.assetClass.symbol, datum.value.assetClass.name)
@@ -86,7 +86,8 @@ export const collectPartial = async (
   //emulator sets LowerBound inclusive and UpperBound not inclusive
   //PLowerBound [_0 = (PFinite [_0 = (PPOSIXTime 1688213154353)]), _1 = PTrue]
 
-  const upperBound = config.currentTime + 3_000;
+  const upperBound = config.currentTime + 100_000;
+  const lowerBound = config.currentTime - 100_000
 
   try {
     if (vestingTimeRemaining < 0n) {
@@ -98,8 +99,8 @@ export const collectPartial = async (
           [vestingTokenUnit]: vestingTokenAmount,
         })
         .addSigner(beneficiaryAddress)
-        .validFrom(config.currentTime)
-        .validTo(config.currentTime)
+        .validFrom(lowerBound)
+        .validTo(upperBound)
         .complete();
       return { type: "ok", data: tx };
     } else {
@@ -116,8 +117,8 @@ export const collectPartial = async (
           { [vestingTokenUnit]: expectedRemainingQty }
         )
         .addSigner(beneficiaryAddress)
-        .validFrom(config.currentTime)
-        .validTo(config.currentTime)
+        .validFrom(lowerBound)
+        .validTo(upperBound)
         .complete();
       return { type: "ok", data: tx };
     }
