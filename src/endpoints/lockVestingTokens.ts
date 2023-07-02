@@ -14,9 +14,7 @@ export const lockTokens = async (
   lucid: Lucid,
   config: LockTokensConfig
 ): Promise<Result<TxComplete>> => {
-
-  lucid.selectWalletFrom({address: config.userAddress})
-
+  lucid.selectWalletFrom({ address: config.userAddress });
 
   const walletUtxos = await lucid.wallet.getUtxos();
 
@@ -34,7 +32,7 @@ export const lockTokens = async (
       beneficiary: fromAddress(config.beneficiary),
       assetClass: {
         symbol: config.vestingAsset.policyId,
-        name: fromText(config.vestingAsset.tokenName),
+        name: config.vestingAsset.tokenName,
       },
       totalVestingQty: BigInt(config.totalVestingQty),
       vestingPeriodStart: BigInt(config.vestingPeriodStart),
@@ -47,10 +45,7 @@ export const lockTokens = async (
   );
 
   const unit = config.vestingAsset.policyId
-    ? toUnit(
-        config.vestingAsset.policyId,
-        fromText(config.vestingAsset.tokenName)
-      )
+    ? toUnit(config.vestingAsset.policyId, config.vestingAsset.tokenName)
     : "lovelace";
 
   try {
