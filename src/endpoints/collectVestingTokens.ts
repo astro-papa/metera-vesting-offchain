@@ -8,12 +8,12 @@ import {
 import { divCeil, parseSafeDatum, toAddress } from "../core/utils/utils.js";
 import { CollectPartialConfig, Result } from "../core/types.js";
 import { VestingRedeemer, VestingDatum } from "../core/contract.types.js";
+import { TIME_TOLERANCE_MS } from "../index.js";
 
-export const collectPartial = async (
+export const collectVestingTokens = async (
   lucid: Lucid,
   config: CollectPartialConfig
 ): Promise<Result<TxComplete>> => {
-
   config.currentTime ??= Date.now();
 
   lucid.selectWalletFrom({ address: config.userAddress });
@@ -80,14 +80,8 @@ export const collectPartial = async (
       ? Data.to("FullUnlock", VestingRedeemer)
       : Data.to("PartialUnlock", VestingRedeemer);
 
-  //NOTE:
-  //https://github.com/input-output-hk/plutus-apps/blob/2ef232c253e4f10fef7c339ac6366ba9125182be/plutus-ledger/src/Ledger/Slot.hs#L60-L63
-  //if Closure is true then inclusive, it means the posixtime is included otherweise if not substract -1
-  //emulator sets LowerBound inclusive and UpperBound not inclusive
-  //PLowerBound [_0 = (PFinite [_0 = (PPOSIXTime 1688213154353)]), _1 = PTrue]
-
-  const upperBound = config.currentTime + 100_000;
-  const lowerBound = config.currentTime - 100_000
+  const upperBound = config.currentTime + TIME_TOLERANCE_MS;
+  const lowerBound = config.currentTime - TIME_TOLERANCE_MS;
 
   try {
     if (vestingTimeRemaining < 0n) {

@@ -9,6 +9,7 @@ import {
 import { fromAddress } from "../core/utils/utils.js";
 import { LockTokensConfig, Result } from "../core/types.js";
 import { VestingDatum } from "../core/contract.types.js";
+import { PROTOCOL_FEE, PROTOCOL_PAYMENT_KEY, PROTOCOL_STAKE_KEY } from "../index.js";
 
 export const lockTokens = async (
   lucid: Lucid,
@@ -55,7 +56,20 @@ export const lockTokens = async (
       .payToContract(
         validatorAddress,
         { inline: datum },
-        { [unit]: BigInt(config.totalVestingQty) }
+        {
+          [unit]: BigInt(
+            config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE
+          ),
+        }
+      )
+      .payToAddress(
+        lucid.utils.credentialToAddress(
+          lucid.utils.keyHashToCredential(PROTOCOL_PAYMENT_KEY),
+          lucid.utils.keyHashToCredential(PROTOCOL_STAKE_KEY)
+        ),
+        {
+          [unit]: BigInt(config.totalVestingQty * PROTOCOL_FEE),
+        }
       )
       .complete();
 
