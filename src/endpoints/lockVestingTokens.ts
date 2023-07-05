@@ -35,7 +35,7 @@ export const lockTokens = async (
         symbol: config.vestingAsset.policyId,
         name: config.vestingAsset.tokenName,
       },
-      totalVestingQty: BigInt(config.totalVestingQty),
+      totalVestingQty: BigInt(config.totalVestingQty- config.totalVestingQty * PROTOCOL_FEE),
       vestingPeriodStart: BigInt(config.vestingPeriodStart),
       vestingPeriodEnd: BigInt(config.vestingPeriodEnd),
       firstUnlockPossibleAfter: BigInt(config.firstUnlockPossibleAfter),
