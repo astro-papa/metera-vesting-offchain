@@ -1,2 +1,2 @@
-export * from "./collectPartial.js"
+export * from "./collectVestingTokens.js"
 export * from "./lockVestingTokens.js"
