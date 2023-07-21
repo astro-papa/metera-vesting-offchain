@@ -16,8 +16,6 @@ export const collectVestingTokens = async (
 ): Promise<Result<TxComplete>> => {
   config.currentTime ??= Date.now();
 
-  lucid.selectWalletFrom({ address: config.userAddress });
-
   const vestingValidator: SpendingValidator = {
     type: "PlutusV2",
     script: config.scripts.vesting,

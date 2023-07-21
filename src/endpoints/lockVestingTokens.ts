@@ -15,7 +15,6 @@ export const lockTokens = async (
   lucid: Lucid,
   config: LockTokensConfig
 ): Promise<Result<TxComplete>> => {
-  lucid.selectWalletFrom({ address: config.userAddress });
 
   const walletUtxos = await lucid.wallet.getUtxos();
 

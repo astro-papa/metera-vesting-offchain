@@ -58,6 +58,7 @@ export const parseUTxOsAtScript = async <T>(
   datumType: T,
   stakeCredentialHash?: string
 ): Promise<ReadableUTxO<T>[]> => {
+  //FIX: this can throw an error if script is empty or not initialized
   const utxos = await utxosAtScript(lucid, script, stakeCredentialHash);
   return utxos.flatMap((utxo) => {
     const result = parseSafeDatum<T>(lucid, utxo.datum, datumType);
