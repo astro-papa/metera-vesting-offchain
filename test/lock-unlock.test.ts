@@ -77,14 +77,13 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     scripts: {
       vesting: linearVesting.cborHex,
     },
-    userAddress: users.account1.address,
   };
 
+  lucid.selectWalletFromSeed(users.account1.seedPhrase);
   const lockVestingUnSigned = await lockTokens(lucid, lockVestingConfig);
   // console.log("lockVestingUnSigned", lockVestingUnSigned)
   expect(lockVestingUnSigned.type).toBe("ok");
   if (lockVestingUnSigned.type == "ok") {
-    lucid.selectWalletFromSeed(users.account1.seedPhrase);
     // console.log(tx.data.txComplete.to_json())
     const lockVestingSigned = await lockVestingUnSigned.data.sign().complete();
     const lockVestingHash = await lockVestingSigned.submit();
@@ -110,21 +109,20 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     scripts: {
       vesting: linearVesting.cborHex,
     },
-    userAddress: users.account2.address,
     currentTime: emulator.now(),
   };
 
+  lucid.selectWalletFromSeed(users.account2.seedPhrase);
   const collectPartialUnsigned1 = await collectVestingTokens(
     lucid,
     collectPartialConfig1
   );
 
-  // console.log(collectPartialUnsigned1);
+  console.log(collectPartialUnsigned1);
   expect(collectPartialUnsigned1.type).toBe("ok");
 
   if (collectPartialUnsigned1.type == "error") return;
   // console.log(tx.data.txComplete.to_json())
-  lucid.selectWalletFromSeed(users.account2.seedPhrase);
   const collectPartialSigned1 = await collectPartialUnsigned1.data
     .sign()
     .complete();
@@ -147,10 +145,10 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     scripts: {
       vesting: linearVesting.cborHex,
     },
-    userAddress: users.account2.address,
     currentTime: emulator.now(),
   };
 
+  lucid.selectWalletFromSeed(users.account2.seedPhrase);
   const collectPartialUnsigned2 = await collectVestingTokens(
     lucid,
     collectPartialConfig2
@@ -161,7 +159,6 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
 
   if (collectPartialUnsigned2.type == "error") return;
   // console.log(tx.data.txComplete.to_json())
-  lucid.selectWalletFromSeed(users.account2.seedPhrase);
   const collectPartialSigned2 = await collectPartialUnsigned2.data
     .sign()
     .complete();
@@ -184,10 +181,10 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     scripts: {
       vesting: linearVesting.cborHex,
     },
-    userAddress: users.account2.address,
     currentTime: emulator.now(),
   };
 
+  lucid.selectWalletFromSeed(users.account2.seedPhrase);
   const collectPartialUnsigned3 = await collectVestingTokens(
     lucid,
     collectPartialConfig3
@@ -198,7 +195,6 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
 
   if (collectPartialUnsigned3.type == "error") return;
   // console.log(tx.data.txComplete.to_json())
-  lucid.selectWalletFromSeed(users.account2.seedPhrase);
   const collectPartialSigned3 = await collectPartialUnsigned3.data
     .sign()
     .complete();
@@ -221,10 +217,10 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     scripts: {
       vesting: linearVesting.cborHex,
     },
-    userAddress: users.account2.address,
     currentTime: emulator.now(),
   };
 
+  lucid.selectWalletFromSeed(users.account2.seedPhrase);
   const collectPartialUnsigned4 = await collectVestingTokens(
     lucid,
     collectPartialConfig4
@@ -232,10 +228,8 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
 
   // console.log(collectPartialUnsigned4);
   expect(collectPartialUnsigned4.type).toBe("ok");
-
   if (collectPartialUnsigned4.type == "error") return;
   // console.log(tx.data.txComplete.to_json())
-  lucid.selectWalletFromSeed(users.account2.seedPhrase);
   const collectPartialSigned4 = await collectPartialUnsigned4.data
     .sign()
     .complete();
