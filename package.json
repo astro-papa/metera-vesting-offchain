@@ -29,7 +29,7 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "lucid-cardano": "file:../../../solidsnakedev/lucid/dist/lucid-cardano-0.10.6.tgz"
+    "lucid-cardano": "^0.10.6"
   },
   "directories": {
     "test": "test"
