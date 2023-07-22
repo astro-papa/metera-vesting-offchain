@@ -29,7 +29,6 @@ export type LockTokensConfig = {
   scripts: {
     vesting: CborHex;
   };
-  userAddress: Address;
 };
 
 export type CollectPartialConfig = {
@@ -37,7 +36,6 @@ export type CollectPartialConfig = {
   scripts: {
     vesting: CborHex;
   };
-  userAddress: Address;
   currentTime?: POSIXTime;
 };
 
