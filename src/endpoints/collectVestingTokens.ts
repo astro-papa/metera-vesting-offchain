@@ -41,25 +41,25 @@ export const collectVestingTokens = async (
 
   const vestingTimeRemaining =
     datum.value.vestingPeriodEnd - BigInt(config.currentTime);
-  console.log("vestingTimeRemaining", vestingTimeRemaining);
+  // console.log("vestingTimeRemaining", vestingTimeRemaining);
 
   const timeBetweenTwoInstallments = divCeil(
     vestingPeriodLength,
     datum.value.totalInstallments
   );
-  console.log("timeBetweenTwoInstallments", timeBetweenTwoInstallments);
+  // console.log("timeBetweenTwoInstallments", timeBetweenTwoInstallments);
 
   const futureInstallments = divCeil(
     vestingTimeRemaining,
     timeBetweenTwoInstallments
   );
-  console.log("futureInstallments", futureInstallments);
+  // console.log("futureInstallments", futureInstallments);
 
   const expectedRemainingQty = divCeil(
     futureInstallments * datum.value.totalVestingQty,
     datum.value.totalInstallments
   );
-  console.log("expectedRemainingQty", expectedRemainingQty);
+  // console.log("expectedRemainingQty", expectedRemainingQty);
 
   const vestingTokenUnit = datum.value.assetClass.symbol
     ? toUnit(datum.value.assetClass.symbol, datum.value.assetClass.name)
