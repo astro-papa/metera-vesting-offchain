@@ -12,7 +12,7 @@
     "test": "",
     "build": "tsup src/index.ts --minify --format esm,cjs --dts --clean",
     "lint": "eslint",
-    "repack": "npm run build  && npm pack",
+    "repack": "pnpm run build  && pnpm pack",
     "ts-node": "ts-node"
   },
   "keywords": [],
@@ -20,6 +20,7 @@
   "license": "ISC",
   "devDependencies": {
     "@sinclair/typebox": "^0.25.13",
+    "@types/node": "^20.4.9",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
     "eslint": "^8.39.0",
