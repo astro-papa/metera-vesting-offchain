@@ -13,7 +13,7 @@ import {
   toUnit,
   TWENTY_FOUR_HOURS_MS,
   VestingDatum,
-} from "linear-vesting-offchain";
+} from "@anastasia-labs/linear-vesting-offchain"
 import { beforeEach, expect, test } from "vitest";
 import linearVesting from "./linearVesting.json";
 
