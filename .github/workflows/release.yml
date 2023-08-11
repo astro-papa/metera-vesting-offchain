@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'pnpm'
+          cache: "pnpm"
       - run: pnpm i
       - run: pnpm run lint && pnpm run build
 
@@ -33,9 +33,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'pnpm'
+          cache: "pnpm"
           registry-url: https://npm.pkg.github.com/
-      - run: pnpm i
+      - run: pnpm i --frozen-lockfile
+      - name: Build 🔨
+        run: pnpm build
       - run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
