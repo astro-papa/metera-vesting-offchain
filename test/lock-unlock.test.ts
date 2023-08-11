@@ -3,6 +3,7 @@ import {
   collectVestingTokens,
   Emulator,
   generateAccountSeedPhrase,
+  getVestingByAddress,
   lockTokens,
   LockTokensConfig,
   Lucid,
@@ -93,19 +94,17 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   //NOTE: INSTALLMENT 1
   emulator.awaitBlock(1080);
 
-  const utxosAtVesting = await parseUTxOsAtScript(
+  const utxosAtVesting1 = await getVestingByAddress(
     lucid,
-    linearVesting.cborHex,
-    VestingDatum
+    users.account2.address,
+    linearVesting.cborHex
   );
-  console.log("utxosAtVesting", utxosAtVesting);
+  console.log("utxosAtVesting1", utxosAtVesting1);
   console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
   console.log("INSTALLMENT 1");
 
   const collectPartialConfig1: CollectPartialConfig = {
-    vestingOutRef: (
-      await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
-    )[0].outRef,
+    vestingOutRef: utxosAtVesting1[0].outRef,
     scripts: {
       vesting: linearVesting.cborHex,
     },
@@ -131,17 +130,18 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   //NOTE: INSTALLMENT 2
   emulator.awaitBlock(1080);
 
-  console.log(
-    "utxosAtVesting",
-    await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
+  const utxosAtVesting2 = await getVestingByAddress(
+    lucid,
+    users.account2.address,
+    linearVesting.cborHex
   );
+  console.log("utxosAtVesting2", utxosAtVesting2);
+
   console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
   console.log("INSTALLMENT 2");
 
   const collectPartialConfig2: CollectPartialConfig = {
-    vestingOutRef: (
-      await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
-    )[0].outRef,
+    vestingOutRef: utxosAtVesting2[0].outRef,
     scripts: {
       vesting: linearVesting.cborHex,
     },
@@ -167,17 +167,18 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   //NOTE: INSTALLMENT 3
   emulator.awaitBlock(1080);
 
-  console.log(
-    "utxosAtVesting",
-    await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
+  const utxosAtVesting3 = await getVestingByAddress(
+    lucid,
+    users.account2.address,
+    linearVesting.cborHex
   );
+  console.log("utxosAtVesting3", utxosAtVesting3);
+
   console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
   console.log("INSTALLMENT 3");
 
   const collectPartialConfig3: CollectPartialConfig = {
-    vestingOutRef: (
-      await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
-    )[0].outRef,
+    vestingOutRef: utxosAtVesting3[0].outRef,
     scripts: {
       vesting: linearVesting.cborHex,
     },
@@ -203,17 +204,18 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   //NOTE: INSTALLMENT 4
   emulator.awaitBlock(1081);
 
-  console.log(
-    "utxosAtVesting",
-    await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
+  const utxosAtVesting4 = await getVestingByAddress(
+    lucid,
+    users.account2.address,
+    linearVesting.cborHex
   );
+  console.log("utxosAtVesting4", utxosAtVesting4);
+
   console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
   console.log("INSTALLMENT 4");
 
   const collectPartialConfig4: CollectPartialConfig = {
-    vestingOutRef: (
-      await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
-    )[0].outRef,
+    vestingOutRef: utxosAtVesting4[0].outRef,
     scripts: {
       vesting: linearVesting.cborHex,
     },

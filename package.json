@@ -1,6 +1,9 @@
 {
-  "name": "linear-vesting-offchain",
-  "version": "0.0.6",
+  "name": "@anastasia-labs/linear-vesting-offchain",
+  "publishConfig": {
+    "@anastasia-labs:registry": "https://npm.pkg.github.com"
+  },
+  "version": "0.0.7",
   "description": "https://docs.github.com/en/packages/quickstart",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,7 +15,7 @@
     "test": "",
     "build": "tsup src/index.ts --minify --format esm,cjs --dts --clean",
     "lint": "eslint",
-    "repack": "npm run build  && npm pack",
+    "repack": "pnpm run build  && pnpm pack",
     "ts-node": "ts-node"
   },
   "keywords": [],
@@ -20,6 +23,7 @@
   "license": "ISC",
   "devDependencies": {
     "@sinclair/typebox": "^0.25.13",
+    "@types/node": "^20.4.9",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
     "eslint": "^8.39.0",
