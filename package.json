@@ -1,8 +1,5 @@
 {
   "name": "@anastasia-labs/linear-vesting-offchain",
-  "publishConfig": {
-    "@anastasia-labs:registry": "https://npm.pkg.github.com"
-  },
   "version": "0.0.7",
   "description": "https://docs.github.com/en/packages/quickstart",
   "main": "./dist/index.js",
