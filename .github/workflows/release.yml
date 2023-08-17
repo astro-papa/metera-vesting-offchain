@@ -34,10 +34,10 @@ jobs:
         with:
           node-version: 18
           cache: "pnpm"
-          registry-url: https://npm.pkg.github.com/
+          registry-url: 'https://registry.npmjs.org'
       - run: pnpm i --frozen-lockfile
       - name: Build 🔨
         run: pnpm build
-      - run: pnpm publish --no-git-checks
+      - run: pnpm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

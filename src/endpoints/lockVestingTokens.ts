@@ -5,7 +5,7 @@ import {
   fromText,
   TxComplete,
   toUnit,
-} from "lucid-cardano";
+} from "@anastasia-labs/lucid-cardano-fork"
 import { fromAddress } from "../core/utils/utils.js";
 import { LockTokensConfig, Result } from "../core/types.js";
 import { VestingDatum } from "../core/contract.types.js";

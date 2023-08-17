@@ -1,9 +1,6 @@
 {
   "name": "@anastasia-labs/linear-vesting-offchain",
-  "publishConfig": {
-    "@anastasia-labs:registry": "https://npm.pkg.github.com"
-  },
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "https://docs.github.com/en/packages/quickstart",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -36,6 +33,6 @@
     "test": "test"
   },
   "dependencies": {
-    "lucid-cardano": "./lucid-cardano-0.10.7.tgz"
+    "@anastasia-labs/lucid-cardano-fork": "^0.10.7"
   }
 }

@@ -8,7 +8,7 @@ import {
   getAddressDetails,
   Lucid,
   SpendingValidator,
-} from "lucid-cardano";
+} from "@anastasia-labs/lucid-cardano-fork"
 import { AddressD } from "../contract.types.js";
 import { Either, ReadableUTxO, Result } from "../types.js";
 

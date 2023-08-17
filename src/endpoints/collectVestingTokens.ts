@@ -4,7 +4,7 @@ import {
   SpendingValidator,
   toUnit,
   TxComplete,
-} from "lucid-cardano";
+} from "@anastasia-labs/lucid-cardano-fork"
 import { divCeil, parseSafeDatum, toAddress } from "../core/utils/utils.js";
 import { CollectPartialConfig, Result } from "../core/types.js";
 import { VestingRedeemer, VestingDatum } from "../core/contract.types.js";
