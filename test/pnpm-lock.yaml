@@ -15,6 +15,18 @@ devDependencies:
 
 packages:
 
+  /@anastasia-labs/lucid-cardano-fork@0.10.7:
+    resolution: {integrity: sha512-41MVPku0QzRpm1E3/Ynux3L1NhC2UpbPr+ODFl8FiUrnbuH3ymVEPRVfhNtFu9BFr0ZpWSUsujLT0kylqgCsHg==}
+    engines: {node: '>=14'}
+    dependencies:
+      '@peculiar/webcrypto': 1.4.3
+      node-fetch: 3.3.2
+      ws: 8.13.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
     engines: {node: '>=12'}
@@ -253,8 +265,8 @@ packages:
     resolution: {integrity: sha512-mEo1sAde+UCE6b2hxn332f1g1E8WfYRu6p5SvTKr2ZKC1f7gFJXk4h5PyGP9Dt6gCaG8y8XhwnXWC6Iy2cmBng==}
     dev: true
 
-  /@types/node@20.4.9:
-    resolution: {integrity: sha512-8e2HYcg7ohnTUbHk8focoklEQYvemQmu9M/f43DZVx43kHn0tE3BY/6gSDxS7k0SprtS0NHvj+L80cGLnoOUcQ==}
+  /@types/node@20.4.10:
+    resolution: {integrity: sha512-vwzFiiy8Rn6E0MtA13/Cxxgpan/N6UeNYR9oUu6kuJWxu6zCk98trcDp8CBhbtaeuq9SykCmXkFr2lWLoPcvLg==}
     dev: true
 
   /@vitest/expect@0.30.1:
@@ -687,7 +699,7 @@ packages:
     resolution: {integrity: sha512-RsPyTbqORDNDxqAdQPQBpgqhWle1VcTSou/FraClYlHf6TZnQcGslpLcAphNR+sQW4q5lLWLbOsRlh9j24baQg==}
     dev: true
 
-  /vite-node@0.30.1(@types/node@20.4.9):
+  /vite-node@0.30.1(@types/node@20.4.10):
     resolution: {integrity: sha512-vTikpU/J7e6LU/8iM3dzBo8ZhEiKZEKRznEMm+mJh95XhWaPrJQraT/QsT2NWmuEf+zgAoMe64PKT7hfZ1Njmg==}
     engines: {node: '>=v14.18.0'}
     hasBin: true
@@ -697,7 +709,7 @@ packages:
       mlly: 1.4.0
       pathe: 1.1.1
       picocolors: 1.0.0
-      vite: 4.4.9(@types/node@20.4.9)
+      vite: 4.4.9(@types/node@20.4.10)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -709,7 +721,7 @@ packages:
       - terser
     dev: true
 
-  /vite@4.4.9(@types/node@20.4.9):
+  /vite@4.4.9(@types/node@20.4.10):
     resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -737,7 +749,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.4.9
+      '@types/node': 20.4.10
       esbuild: 0.18.20
       postcss: 8.4.27
       rollup: 3.28.0
@@ -778,7 +790,7 @@ packages:
     dependencies:
       '@types/chai': 4.3.5
       '@types/chai-subset': 1.3.3
-      '@types/node': 20.4.9
+      '@types/node': 20.4.10
       '@vitest/expect': 0.30.1
       '@vitest/runner': 0.30.1
       '@vitest/snapshot': 0.30.1
@@ -799,8 +811,8 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.0
       tinypool: 0.4.0
-      vite: 4.4.9(@types/node@20.4.9)
-      vite-node: 0.30.1(@types/node@20.4.9)
+      vite: 4.4.9(@types/node@20.4.10)
+      vite-node: 0.30.1(@types/node@20.4.10)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
       - less
@@ -864,25 +876,11 @@ packages:
     dev: true
 
   file:../anastasia-labs-linear-vesting-offchain-0.0.7.tgz:
-    resolution: {integrity: sha512-9Z1SqT3XjPBtzm8i4BgQM2LmeI43brW8Kqid4DJHF5cuMMvWBfJkuQ+lEGdwyqMwFq93e2Jy66qdm2YK3hfTtA==, tarball: file:../anastasia-labs-linear-vesting-offchain-0.0.7.tgz}
+    resolution: {integrity: sha512-3Xufa3HkDZabX0b8alGMDyg/L6RJB5GkVm5ntK8kMTSfRnRC2MpBvRxhCjZ08uHJ8v/TBCD+B7jiwKBFf0GD+w==, tarball: file:../anastasia-labs-linear-vesting-offchain-0.0.7.tgz}
     name: '@anastasia-labs/linear-vesting-offchain'
     version: 0.0.7
     dependencies:
-      lucid-cardano: file:lucid-cardano-0.10.7.tgz
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
-
-  file:lucid-cardano-0.10.7.tgz:
-    resolution: {integrity: sha512-I8ptGZC7wWiwk7be+7gXfQ3BGOFYt44k67GKzrs5H/U5crEfMEtIAC3h6NY07qmiVtMmaOYnliNhLxaDJu55Hg==, tarball: file:lucid-cardano-0.10.7.tgz}
-    name: lucid-cardano
-    version: 0.10.7
-    engines: {node: '>=14'}
-    dependencies:
-      '@peculiar/webcrypto': 1.4.3
-      node-fetch: 3.3.2
-      ws: 8.13.0
+      '@anastasia-labs/lucid-cardano-fork': 0.10.7
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate

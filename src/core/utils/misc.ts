@@ -1,4 +1,4 @@
-import { Address, Lucid, toUnit } from "lucid-cardano";
+import { Address, Lucid, toUnit } from "@anastasia-labs/lucid-cardano-fork"
 import { VestingDatum } from "../contract.types.js";
 import { CborHex, ReadableUTxO } from "../types.js";
 import { divCeil, parseUTxOsAtScript, toAddress } from "./utils.js";

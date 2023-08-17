@@ -36,6 +36,6 @@
     "test": "test"
   },
   "dependencies": {
-    "lucid-cardano": "./lucid-cardano-0.10.7.tgz"
+    "@anastasia-labs/lucid-cardano-fork": "^0.10.7"
   }
 }
