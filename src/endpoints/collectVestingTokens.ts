@@ -78,8 +78,8 @@ export const collectVestingTokens = async (
       ? Data.to("FullUnlock", VestingRedeemer)
       : Data.to("PartialUnlock", VestingRedeemer);
 
-  const upperBound = (config.currentTime + TIME_TOLERANCE_MS);
-  const lowerBound = (config.currentTime - TIME_TOLERANCE_MS);
+  const upperBound = Number(config.currentTime + TIME_TOLERANCE_MS);
+  const lowerBound = Number(config.currentTime - TIME_TOLERANCE_MS);
 
   try {
     if (vestingTimeRemaining < 0n) {
