@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@anastasia-labs/linear-vesting-offchain':
-    specifier: file:../anastasia-labs-linear-vesting-offchain-0.0.9.tgz
-    version: file:../anastasia-labs-linear-vesting-offchain-0.0.9.tgz
+    specifier: file:../anastasia-labs-linear-vesting-offchain-0.0.10.tgz
+    version: file:../anastasia-labs-linear-vesting-offchain-0.0.10.tgz
 
 devDependencies:
   typescript:
@@ -875,10 +875,10 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  file:../anastasia-labs-linear-vesting-offchain-0.0.9.tgz:
-    resolution: {integrity: sha512-qol3HdHe816NOOAXqaBATp+SajVRmfh3bEe9QLJPEK9+tj5h6CiYjlVAJl6ZpJ/KKIhrsh2KJYDjlr7opHs1vQ==, tarball: file:../anastasia-labs-linear-vesting-offchain-0.0.9.tgz}
+  file:../anastasia-labs-linear-vesting-offchain-0.0.10.tgz:
+    resolution: {integrity: sha512-ONQ5Po/BLVD/kDmFh+S7GxyEihh6CnkeSSXV9fy2abI7OI4Nh3lnnbfF3vWYKX0I8tJti9gMHvbiJ8FYK0ykIA==, tarball: file:../anastasia-labs-linear-vesting-offchain-0.0.10.tgz}
     name: '@anastasia-labs/linear-vesting-offchain'
-    version: 0.0.9
+    version: 0.0.10
     dependencies:
       '@anastasia-labs/lucid-cardano-fork': 0.10.7
     transitivePeerDependencies:

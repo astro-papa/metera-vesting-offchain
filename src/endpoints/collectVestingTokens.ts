@@ -4,7 +4,7 @@ import {
   SpendingValidator,
   toUnit,
   TxComplete,
-} from "@anastasia-labs/lucid-cardano-fork"
+} from "@anastasia-labs/lucid-cardano-fork";
 import { divCeil, parseSafeDatum, toAddress } from "../core/utils/utils.js";
 import { CollectPartialConfig, Result } from "../core/types.js";
 import { VestingRedeemer, VestingDatum } from "../core/contract.types.js";
@@ -64,10 +64,11 @@ export const collectVestingTokens = async (
   const vestingTokenUnit = datum.value.assetClass.symbol
     ? toUnit(datum.value.assetClass.symbol, datum.value.assetClass.name)
     : "lovelace";
+  // console.log("vestingTokenUnit", vestingTokenUnit)
 
   const vestingTokenAmount =
     vestingTimeRemaining < 0n
-      ? expectedRemainingQty
+      ? vestingUTXO.assets[vestingTokenUnit]
       : vestingUTXO.assets[vestingTokenUnit] - expectedRemainingQty;
   // console.log("vestingTokenAmount", vestingTokenAmount);
 
