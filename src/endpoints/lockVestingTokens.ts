@@ -2,7 +2,6 @@ import {
   Lucid,
   SpendingValidator,
   Data,
-  fromText,
   TxComplete,
   toUnit,
 } from "@anastasia-labs/lucid-cardano-fork"
@@ -39,7 +38,6 @@ export const lockTokens = async (
       vestingPeriodEnd: BigInt(config.vestingPeriodEnd),
       firstUnlockPossibleAfter: BigInt(config.firstUnlockPossibleAfter),
       totalInstallments: BigInt(config.totalInstallments),
-      vestingMemo: fromText(config.vestingMemo),
     },
     VestingDatum
   );
