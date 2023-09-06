@@ -876,7 +876,7 @@ packages:
     dev: true
 
   file:../anastasia-labs-linear-vesting-offchain-0.0.10.tgz:
-    resolution: {integrity: sha512-ONQ5Po/BLVD/kDmFh+S7GxyEihh6CnkeSSXV9fy2abI7OI4Nh3lnnbfF3vWYKX0I8tJti9gMHvbiJ8FYK0ykIA==, tarball: file:../anastasia-labs-linear-vesting-offchain-0.0.10.tgz}
+    resolution: {integrity: sha512-iTnzrNoW9IORauJzx2exWfL6bkGwPADDG0hDSw/7g2dB/96VEc0C4A8Cq08ZlXbZrSBv7/GThKmjhlWGZd8cGQ==, tarball: file:../anastasia-labs-linear-vesting-offchain-0.0.10.tgz}
     name: '@anastasia-labs/linear-vesting-offchain'
     version: 0.0.10
     dependencies:

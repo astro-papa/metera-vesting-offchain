@@ -74,7 +74,6 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     vestingPeriodEnd: emulator.now() + TWENTY_FOUR_HOURS_MS,
     firstUnlockPossibleAfter: emulator.now(),
     totalInstallments: 4,
-    vestingMemo: "",
     scripts: {
       vesting: linearVesting.cborHex,
     },

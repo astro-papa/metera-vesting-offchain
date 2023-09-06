@@ -71,7 +71,6 @@ export const VestingDatumSchema = Data.Object({
   vestingPeriodEnd: Data.Integer(),
   firstUnlockPossibleAfter: Data.Integer(),
   totalInstallments: Data.Integer(),
-  vestingMemo: Data.Bytes(),
 });
 export type VestingDatum = Data.Static<typeof VestingDatumSchema>;
 

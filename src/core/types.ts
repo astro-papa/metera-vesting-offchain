@@ -25,7 +25,6 @@ export type LockTokensConfig = {
   vestingPeriodEnd: POSIXTime;
   firstUnlockPossibleAfter: POSIXTime;
   totalInstallments: number;
-  vestingMemo: string;
   scripts: {
     vesting: CborHex;
   };
