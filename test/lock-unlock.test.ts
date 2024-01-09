@@ -13,9 +13,9 @@ import {
   toUnit,
   TWENTY_FOUR_HOURS_MS,
   VestingDatum,
-} from "@anastasia-labs/linear-vesting-offchain"
+} from "../src/index.js"
 import { beforeEach, expect, test } from "vitest";
-import linearVesting from "./linearVesting.json";
+import linearVesting from "./linearVesting.json" assert { type: "json" };
 
 type LucidContext = {
   lucid: Lucid;
@@ -98,9 +98,9 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     users.account2.address,
     linearVesting.cborHex
   );
-  console.log("utxosAtVesting1", utxosAtVesting1);
-  console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
-  console.log("INSTALLMENT 1");
+  // console.log("utxosAtVesting1", utxosAtVesting1);
+  // console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
+  // console.log("INSTALLMENT 1");
 
   const collectPartialConfig1: CollectPartialConfig = {
     vestingOutRef: utxosAtVesting1[0].outRef,
@@ -116,7 +116,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     collectPartialConfig1
   );
 
-  console.log(collectPartialUnsigned1);
+  // console.log(collectPartialUnsigned1);
   expect(collectPartialUnsigned1.type).toBe("ok");
 
   if (collectPartialUnsigned1.type == "error") return;
@@ -134,10 +134,10 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     users.account2.address,
     linearVesting.cborHex
   );
-  console.log("utxosAtVesting2", utxosAtVesting2);
+  // console.log("utxosAtVesting2", utxosAtVesting2);
 
-  console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
-  console.log("INSTALLMENT 2");
+  // console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
+  // console.log("INSTALLMENT 2");
 
   const collectPartialConfig2: CollectPartialConfig = {
     vestingOutRef: utxosAtVesting2[0].outRef,
@@ -171,10 +171,10 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     users.account2.address,
     linearVesting.cborHex
   );
-  console.log("utxosAtVesting3", utxosAtVesting3);
+  // console.log("utxosAtVesting3", utxosAtVesting3);
 
-  console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
-  console.log("INSTALLMENT 3");
+  // console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
+  // console.log("INSTALLMENT 3");
 
   const collectPartialConfig3: CollectPartialConfig = {
     vestingOutRef: utxosAtVesting3[0].outRef,
@@ -208,10 +208,10 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     users.account2.address,
     linearVesting.cborHex
   );
-  console.log("utxosAtVesting4", utxosAtVesting4);
+  // console.log("utxosAtVesting4", utxosAtVesting4);
 
-  console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
-  console.log("INSTALLMENT 4");
+  // console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
+  // console.log("INSTALLMENT 4");
 
   const collectPartialConfig4: CollectPartialConfig = {
     vestingOutRef: utxosAtVesting4[0].outRef,
@@ -238,18 +238,18 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
 
   emulator.awaitBlock(180);
 
-  console.log(
-    "utxosAtVesting",
-    await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
-  );
-  console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
-  console.log(
-    "utxos at protocol wallet",
-    await lucid.utxosAt(
-      lucid.utils.credentialToAddress(
-        lucid.utils.keyHashToCredential(PROTOCOL_PAYMENT_KEY),
-        lucid.utils.keyHashToCredential(PROTOCOL_STAKE_KEY)
-      )
-    )
-  );
+  // console.log(
+  //   "utxosAtVesting",
+  //   await parseUTxOsAtScript(lucid, linearVesting.cborHex, VestingDatum)
+  // );
+  // console.log("utxos at wallet", await lucid.utxosAt(users.account2.address));
+  // console.log(
+  //   "utxos at protocol wallet",
+  //   await lucid.utxosAt(
+  //     lucid.utils.credentialToAddress(
+  //       lucid.utils.keyHashToCredential(PROTOCOL_PAYMENT_KEY),
+  //       lucid.utils.keyHashToCredential(PROTOCOL_STAKE_KEY)
+  //     )
+  //   )
+  // );
 });
