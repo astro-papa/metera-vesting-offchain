@@ -12,7 +12,7 @@
       let
         overlays = [
           (self: super: {
-            nodejs = super.nodejs-18_x;
+            nodejs = super.nodejs_20;
             pnpm = super.nodePackages.pnpm;
           })
         ];
