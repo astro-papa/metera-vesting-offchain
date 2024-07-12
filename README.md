@@ -70,10 +70,6 @@ Here's a step-by-step guide to create a new Github package release:
 - To create a new npm package in the github organization, make sure the Node.js package CI succeeds.
 - If the CI Action fails, remove the release, tag, and commit the new changes. Then, push the changes and draft a new release.
 
-# Test framework
-
-https://github.com/vitest-dev/vitest
-
 # Local Build
 
 In the main directory
@@ -81,6 +77,18 @@ In the main directory
 ```
 pnpm run build
 ```
+# Test framework
+
+https://github.com/vitest-dev/vitest
+
+
+# Running Tests
+
+```sh
+pnpm test
+```
+
+![linear-vesting-offchain](/assets/gifs/linear-vesting-offchain.gif)
 
 # Installing sdk pacakage in local test folder
 
