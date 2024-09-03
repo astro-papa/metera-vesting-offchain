@@ -1,19 +1,22 @@
 import {
   Data,
-  Lucid,
+  LucidEvolution,
   SpendingValidator,
   toUnit,
-  TxComplete,
-} from "@anastasia-labs/lucid-cardano-fork";
+  TxSignBuilder,
+  validatorToAddress,
+} from "@lucid-evolution/lucid";
 import { divCeil, parseSafeDatum, toAddress } from "../core/utils/utils.js";
 import { CollectPartialConfig, Result } from "../core/types.js";
 import { VestingRedeemer, VestingDatum } from "../core/contract.types.js";
 import { TIME_TOLERANCE_MS } from "../index.js";
 
 export const collectVestingTokens = async (
-  lucid: Lucid,
+  lucid: LucidEvolution,
   config: CollectPartialConfig
-): Promise<Result<TxComplete>> => {
+): Promise<Result<TxSignBuilder>> => {
+  const network = lucid.config().network;
+
   config.currentTime ??= Date.now();
 
   const vestingValidator: SpendingValidator = {
@@ -22,7 +25,7 @@ export const collectVestingTokens = async (
   };
 
   const vestingValidatorAddress =
-    lucid.utils.validatorToAddress(vestingValidator);
+    validatorToAddress(network, vestingValidator);
 
   const vestingUTXO = (await lucid.utxosByOutRef([config.vestingOutRef]))[0];
 
@@ -32,7 +35,7 @@ export const collectVestingTokens = async (
   if (!vestingUTXO.datum)
     return { type: "error", error: new Error("Missing Datum") };
 
-  const datum = parseSafeDatum(lucid, vestingUTXO.datum, VestingDatum);
+  const datum = parseSafeDatum(vestingUTXO.datum, VestingDatum);
   if (datum.type == "left")
     return { type: "error", error: new Error(datum.value) };
 
@@ -44,7 +47,7 @@ export const collectVestingTokens = async (
   // console.log("vestingTimeRemaining", vestingTimeRemaining);
 
   const timeBetweenTwoInstallments = divCeil(
-    vestingPeriodLength,
+    BigInt(vestingPeriodLength),
     datum.value.totalInstallments
   );
   // console.log("timeBetweenTwoInstallments", timeBetweenTwoInstallments);
@@ -72,7 +75,7 @@ export const collectVestingTokens = async (
       : vestingUTXO.assets[vestingTokenUnit] - expectedRemainingQty;
   // console.log("vestingTokenAmount", vestingTokenAmount);
 
-  const beneficiaryAddress = toAddress(datum.value.beneficiary, lucid);
+  const beneficiaryAddress = toAddress(datum.value.beneficiary, network);
 
   const vestingRedeemer =
     vestingTimeRemaining < 0n
@@ -87,8 +90,8 @@ export const collectVestingTokens = async (
       const tx = await lucid
         .newTx()
         .collectFrom([vestingUTXO], vestingRedeemer)
-        .attachSpendingValidator(vestingValidator)
-        .payToAddress(beneficiaryAddress, {
+        .attach.SpendingValidator(vestingValidator)
+        .pay.ToAddress(beneficiaryAddress, {
           [vestingTokenUnit]: vestingTokenAmount,
         })
         .addSigner(beneficiaryAddress)
@@ -100,13 +103,13 @@ export const collectVestingTokens = async (
       const tx = await lucid
         .newTx()
         .collectFrom([vestingUTXO], vestingRedeemer)
-        .attachSpendingValidator(vestingValidator)
-        .payToAddress(beneficiaryAddress, {
+        .attach.SpendingValidator(vestingValidator)
+        .pay.ToAddress(beneficiaryAddress, {
           [vestingTokenUnit]: vestingTokenAmount,
         })
-        .payToContract(
+        .pay.ToContract(
           vestingValidatorAddress,
-          { inline: Data.to(datum.value, VestingDatum) },
+          { kind: "inline", value: Data.to(datum.value, VestingDatum) },
           { [vestingTokenUnit]: expectedRemainingQty }
         )
         .addSigner(beneficiaryAddress)

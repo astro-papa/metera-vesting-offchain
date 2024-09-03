@@ -3,37 +3,47 @@ import {
   applyDoubleCborEncoding,
   Assets,
   Constr,
+  credentialToAddress,
   Data,
+  Emulator,
   generateSeedPhrase,
   getAddressDetails,
+  keyHashToCredential,
   Lucid,
+  LucidEvolution,
+  Network,
+  scriptHashToCredential,
   SpendingValidator,
-} from "@anastasia-labs/lucid-cardano-fork"
+  UTxO,
+  validatorToAddress,
+} from "@lucid-evolution/lucid";
 import { AddressD } from "../contract.types.js";
 import { Either, ReadableUTxO, Result } from "../types.js";
 
 export const utxosAtScript = async (
-  lucid: Lucid,
+  lucid: LucidEvolution,
   script: string,
   stakeCredentialHash?: string
-) => {
+): Promise<UTxO[]> => {
+  const network = lucid.config().network;
+
   const scriptValidator: SpendingValidator = {
     type: "PlutusV2",
     script: script,
   };
 
   const scriptValidatorAddr = stakeCredentialHash
-    ? lucid.utils.validatorToAddress(
+    ? validatorToAddress(
+        network,
         scriptValidator,
-        lucid.utils.keyHashToCredential(stakeCredentialHash)
+        keyHashToCredential(stakeCredentialHash)
       )
-    : lucid.utils.validatorToAddress(scriptValidator);
+    : validatorToAddress(network, scriptValidator);
 
   return lucid.utxosAt(scriptValidatorAddr);
 };
 
 export const parseSafeDatum = <T>(
-  lucid: Lucid,
   datum: string | null | undefined,
   datumType: T
 ): Either<string, T> => {
@@ -53,28 +63,35 @@ export const parseSafeDatum = <T>(
 };
 
 export const parseUTxOsAtScript = async <T>(
-  lucid: Lucid,
+  lucid: LucidEvolution,
   script: string,
   datumType: T,
   stakeCredentialHash?: string
 ): Promise<ReadableUTxO<T>[]> => {
-  //FIX: this can throw an error if script is empty or not initialized
-  const utxos = await utxosAtScript(lucid, script, stakeCredentialHash);
-  return utxos.flatMap((utxo) => {
-    const result = parseSafeDatum<T>(lucid, utxo.datum, datumType);
-    if (result.type == "right") {
-      return {
-        outRef: {
-          txHash: utxo.txHash,
-          outputIndex: utxo.outputIndex,
-        },
-        datum: result.value,
-        assets: utxo.assets,
-      };
-    } else {
-      return [];
-    }
-  });
+  try {
+    const utxos = await utxosAtScript(
+      lucid,
+      script,
+      stakeCredentialHash
+    );
+    return utxos.flatMap((utxo) => {
+      const result = parseSafeDatum<T>(utxo.datum, datumType);
+      if (result.type == "right") {
+        return {
+          outRef: {
+            txHash: utxo.txHash,
+            outputIndex: utxo.outputIndex,
+          },
+          datum: result.value,
+          assets: utxo.assets,
+        };
+      } else {
+        return [];
+      }
+    });
+  } catch (e) {
+    return [];
+  }
 };
 
 export const toCBORHex = (rawHex: string) => {
@@ -83,11 +100,12 @@ export const toCBORHex = (rawHex: string) => {
 
 export const generateAccountSeedPhrase = async (assets: Assets) => {
   const seedPhrase = generateSeedPhrase();
+  const lucid = await Lucid(new Emulator([]), "Custom");
+  lucid.selectWallet.fromSeed(seedPhrase);
+  const address = lucid.wallet().address;
   return {
     seedPhrase,
-    address: await (await Lucid.new(undefined, "Custom"))
-      .selectWalletFromSeed(seedPhrase)
-      .wallet.address(),
+    address,
     assets,
   };
 };
@@ -120,14 +138,14 @@ export function fromAddress(address: Address): AddressD {
   };
 }
 
-export function toAddress(address: AddressD, lucid: Lucid): Address {
+export function toAddress(address: AddressD, network: Network): Address {
   const paymentCredential = (() => {
     if ("PublicKeyCredential" in address.paymentCredential) {
-      return lucid.utils.keyHashToCredential(
+      return keyHashToCredential(
         address.paymentCredential.PublicKeyCredential[0]
       );
     } else {
-      return lucid.utils.scriptHashToCredential(
+      return scriptHashToCredential(
         address.paymentCredential.ScriptCredential[0]
       );
     }
@@ -136,11 +154,11 @@ export function toAddress(address: AddressD, lucid: Lucid): Address {
     if (!address.stakeCredential) return undefined;
     if ("Inline" in address.stakeCredential) {
       if ("PublicKeyCredential" in address.stakeCredential.Inline[0]) {
-        return lucid.utils.keyHashToCredential(
+        return keyHashToCredential(
           address.stakeCredential.Inline[0].PublicKeyCredential[0]
         );
       } else {
-        return lucid.utils.scriptHashToCredential(
+        return scriptHashToCredential(
           address.stakeCredential.Inline[0].ScriptCredential[0]
         );
       }
@@ -148,7 +166,7 @@ export function toAddress(address: AddressD, lucid: Lucid): Address {
       return undefined;
     }
   })();
-  return lucid.utils.credentialToAddress(paymentCredential, stakeCredential);
+  return credentialToAddress(network, paymentCredential, stakeCredential);
 }
 
 export const fromAddressToData = (address: Address): Result<Data> => {
@@ -178,12 +196,12 @@ export const fromAddressToData = (address: Address): Result<Data> => {
 export const chunkArray = <T>(array: T[], chunkSize: number) => {
   const numberOfChunks = Math.ceil(array.length / chunkSize);
 
-  return [...Array(numberOfChunks)].map((value, index) => {
+  return [...Array(numberOfChunks)].map((_value, index) => {
     return array.slice(index * chunkSize, (index + 1) * chunkSize);
   });
 };
 
-export const replacer = (key: unknown, value: unknown) =>
+export const replacer = (_key: unknown, value: unknown) =>
   typeof value === "bigint" ? value.toString() : value;
 
 export const divCeil = (a: bigint, b: bigint) => {

@@ -1,30 +1,33 @@
 import {
-  Lucid,
+  LucidEvolution,
   SpendingValidator,
   Data,
-  TxComplete,
+  TxSignBuilder,
   toUnit,
-} from "@anastasia-labs/lucid-cardano-fork"
+  validatorToAddress,
+  credentialToAddress,
+  keyHashToCredential,
+} from "@lucid-evolution/lucid";
 import { fromAddress } from "../core/utils/utils.js";
 import { LockTokensConfig, Result } from "../core/types.js";
 import { VestingDatum } from "../core/contract.types.js";
-import { PROTOCOL_FEE, PROTOCOL_PAYMENT_KEY, PROTOCOL_STAKE_KEY } from "../index.js";
+import {
+  PROTOCOL_FEE,
+  PROTOCOL_PAYMENT_KEY,
+  PROTOCOL_STAKE_KEY,
+} from "../index.js";
 
 export const lockTokens = async (
-  lucid: Lucid,
+  lucid: LucidEvolution,
   config: LockTokensConfig
-): Promise<Result<TxComplete>> => {
-
-  const walletUtxos = await lucid.wallet.getUtxos();
-
-  if (!walletUtxos.length)
-    return { type: "error", error: new Error("No utxos in wallet") };
+): Promise<Result<TxSignBuilder>> => {
+  const network = lucid.config().network;
 
   const vestingValidator: SpendingValidator = {
     type: "PlutusV2",
     script: config.scripts.vesting,
   };
-  const validatorAddress = lucid.utils.validatorToAddress(vestingValidator);
+  const validatorAddress = validatorToAddress(network, vestingValidator);
 
   const datum = Data.to(
     {
@@ -33,7 +36,9 @@ export const lockTokens = async (
         symbol: config.vestingAsset.policyId,
         name: config.vestingAsset.tokenName,
       },
-      totalVestingQty: BigInt(config.totalVestingQty- config.totalVestingQty * PROTOCOL_FEE),
+      totalVestingQty: BigInt(
+        config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE
+      ),
       vestingPeriodStart: BigInt(config.vestingPeriodStart),
       vestingPeriodEnd: BigInt(config.vestingPeriodEnd),
       firstUnlockPossibleAfter: BigInt(config.firstUnlockPossibleAfter),
@@ -47,22 +52,27 @@ export const lockTokens = async (
     : "lovelace";
 
   try {
+    const walletUtxos = await lucid.wallet().getUtxos();
+    if (!walletUtxos.length)
+      return { type: "error", error: new Error("No utxos in wallet") };
+
     const tx = await lucid
       .newTx()
       .collectFrom(walletUtxos)
-      .payToContract(
+      .pay.ToContract(
         validatorAddress,
-        { inline: datum },
+        { kind: "inline", value: datum },
         {
           [unit]: BigInt(
             config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE
           ),
         }
       )
-      .payToAddress(
-        lucid.utils.credentialToAddress(
-          lucid.utils.keyHashToCredential(PROTOCOL_PAYMENT_KEY),
-          lucid.utils.keyHashToCredential(PROTOCOL_STAKE_KEY)
+      .pay.ToAddress(
+        credentialToAddress(
+          network,
+          keyHashToCredential(PROTOCOL_PAYMENT_KEY),
+          keyHashToCredential(PROTOCOL_STAKE_KEY)
         ),
         {
           [unit]: BigInt(config.totalVestingQty * PROTOCOL_FEE),
