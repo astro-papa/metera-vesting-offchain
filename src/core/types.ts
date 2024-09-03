@@ -1,4 +1,4 @@
-import { Address, Assets, OutRef, UTxO } from "@anastasia-labs/lucid-cardano-fork"
+import { Address, Assets, OutRef } from "@lucid-evolution/lucid";
 
 export type CborHex = string;
 export type RawHex = string;

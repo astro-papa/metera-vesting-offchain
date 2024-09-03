@@ -1,4 +1,4 @@
-import { Address, Lucid, toUnit } from "@anastasia-labs/lucid-cardano-fork"
+import { Address, LucidEvolution, toUnit } from "@lucid-evolution/lucid";
 import { VestingDatum } from "../contract.types.js";
 import { CborHex, ReadableUTxO } from "../types.js";
 import { divCeil, parseUTxOsAtScript, toAddress } from "./utils.js";
@@ -12,7 +12,7 @@ export function checkVestingUtxo(
     vestingUtxo.datum.vestingPeriodEnd - BigInt(Date.now());
 
   const timeBetweenTwoInstallments = divCeil(
-    vestingPeriodLength,
+    BigInt(vestingPeriodLength),
     vestingUtxo.datum.totalInstallments
   );
 
@@ -40,17 +40,18 @@ export function checkVestingUtxo(
 }
 
 export async function getVestingByAddress(
-  lucid: Lucid,
+  lucid: LucidEvolution,
   address: Address,
   script: CborHex
 ) {
+  const network = lucid.config().network;
   const utxos = await parseUTxOsAtScript<VestingDatum>(
     lucid,
     script,
     VestingDatum
   );
   const userUTxOs = utxos.filter((utxo) => {
-    return toAddress(utxo.datum.beneficiary, lucid) == address;
+    return toAddress(utxo.datum.beneficiary, network) == address;
   });
   return userUTxOs;
 }

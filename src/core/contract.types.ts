@@ -1,4 +1,4 @@
-import { Data } from "@anastasia-labs/lucid-cardano-fork"
+import { Data } from "@lucid-evolution/lucid";
 
 export const OutputReferenceSchema = Data.Object({
   txHash: Data.Object({ hash: Data.Bytes({ minLength: 32, maxLength: 32 }) }),

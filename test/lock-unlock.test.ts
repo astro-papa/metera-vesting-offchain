@@ -2,23 +2,20 @@ import {
   CollectPartialConfig,
   collectVestingTokens,
   Emulator,
-  generateAccountSeedPhrase,
+  generateEmulatorAccount,
   getVestingByAddress,
   lockTokens,
   LockTokensConfig,
   Lucid,
-  parseUTxOsAtScript,
-  PROTOCOL_PAYMENT_KEY,
-  PROTOCOL_STAKE_KEY,
+  LucidEvolution,
   toUnit,
   TWENTY_FOUR_HOURS_MS,
-  VestingDatum,
 } from "../src/index.js"
 import { beforeEach, expect, test } from "vitest";
 import linearVesting from "./linearVesting.json" assert { type: "json" };
 
 type LucidContext = {
-  lucid: Lucid;
+  lucid: LucidEvolution;
   users: any;
   emulator: Emulator;
 };
@@ -26,23 +23,23 @@ type LucidContext = {
 //NOTE: INITIALIZE EMULATOR + ACCOUNTS
 beforeEach<LucidContext>(async (context) => {
   context.users = {
-    treasury1: await generateAccountSeedPhrase({
+    treasury1: generateEmulatorAccount({
       lovelace: BigInt(100_000_000),
     }),
-    project1: await generateAccountSeedPhrase({
+    project1: generateEmulatorAccount({
       lovelace: BigInt(100_000_000),
     }),
-    account1: await generateAccountSeedPhrase({
+    account1: generateEmulatorAccount({
       lovelace: BigInt(100_000_000),
       [toUnit(
         "2c04fa26b36a376440b0615a7cdf1a0c2df061df89c8c055e2650505",
         "63425443"
       )]: BigInt(100_00_000_000),
     }),
-    account2: await generateAccountSeedPhrase({
+    account2: generateEmulatorAccount({
       lovelace: BigInt(100_000_000),
     }),
-    account3: await generateAccountSeedPhrase({
+    account3: generateEmulatorAccount({
       lovelace: BigInt(100_000_000),
     }),
   };
@@ -55,7 +52,7 @@ beforeEach<LucidContext>(async (context) => {
     context.users.account3,
   ]);
 
-  context.lucid = await Lucid.new(context.emulator);
+  context.lucid = await Lucid(context.emulator, "Custom");
 });
 
 test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
@@ -78,14 +75,15 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
       vesting: linearVesting.cborHex,
     },
   };
+  console.log("LOCK VESTING CONFIG", lockVestingConfig);
 
-  lucid.selectWalletFromSeed(users.account1.seedPhrase);
+  lucid.selectWallet.fromSeed(users.account1.seedPhrase);
   const lockVestingUnSigned = await lockTokens(lucid, lockVestingConfig);
-  // console.log("lockVestingUnSigned", lockVestingUnSigned)
+  console.log("lockVestingUnSigned", lockVestingUnSigned)
   expect(lockVestingUnSigned.type).toBe("ok");
   if (lockVestingUnSigned.type == "ok") {
     // console.log(tx.data.txComplete.to_json())
-    const lockVestingSigned = await lockVestingUnSigned.data.sign().complete();
+    const lockVestingSigned = await lockVestingUnSigned.data.sign.withWallet().complete();
     const lockVestingHash = await lockVestingSigned.submit();
     // console.log(loandRquestHash)
   }
@@ -110,7 +108,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     currentTime: emulator.now(),
   };
 
-  lucid.selectWalletFromSeed(users.account2.seedPhrase);
+  lucid.selectWallet.fromSeed(users.account2.seedPhrase);
   const collectPartialUnsigned1 = await collectVestingTokens(
     lucid,
     collectPartialConfig1
@@ -122,7 +120,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   if (collectPartialUnsigned1.type == "error") return;
   // console.log(tx.data.txComplete.to_json())
   const collectPartialSigned1 = await collectPartialUnsigned1.data
-    .sign()
+    .sign.withWallet()
     .complete();
   const collectPartialSignedHash1 = await collectPartialSigned1.submit();
 
@@ -147,7 +145,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     currentTime: emulator.now(),
   };
 
-  lucid.selectWalletFromSeed(users.account2.seedPhrase);
+  lucid.selectWallet.fromSeed(users.account2.seedPhrase);
   const collectPartialUnsigned2 = await collectVestingTokens(
     lucid,
     collectPartialConfig2
@@ -159,7 +157,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   if (collectPartialUnsigned2.type == "error") return;
   // console.log(tx.data.txComplete.to_json())
   const collectPartialSigned2 = await collectPartialUnsigned2.data
-    .sign()
+    .sign.withWallet()
     .complete();
   const collectPartialSignedHash2 = await collectPartialSigned2.submit();
 
@@ -184,7 +182,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     currentTime: emulator.now(),
   };
 
-  lucid.selectWalletFromSeed(users.account2.seedPhrase);
+  lucid.selectWallet.fromSeed(users.account2.seedPhrase);
   const collectPartialUnsigned3 = await collectVestingTokens(
     lucid,
     collectPartialConfig3
@@ -196,7 +194,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   if (collectPartialUnsigned3.type == "error") return;
   // console.log(tx.data.txComplete.to_json())
   const collectPartialSigned3 = await collectPartialUnsigned3.data
-    .sign()
+    .sign.withWallet()
     .complete();
   const collectPartialSignedHash3 = await collectPartialSigned3.submit();
 
@@ -221,7 +219,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
     currentTime: emulator.now(),
   };
 
-  lucid.selectWalletFromSeed(users.account2.seedPhrase);
+  lucid.selectWallet.fromSeed(users.account2.seedPhrase);
   const collectPartialUnsigned4 = await collectVestingTokens(
     lucid,
     collectPartialConfig4
@@ -232,7 +230,7 @@ test<LucidContext>("Test - LockTokens, Unlock Tokens", async ({
   if (collectPartialUnsigned4.type == "error") return;
   // console.log(tx.data.txComplete.to_json())
   const collectPartialSigned4 = await collectPartialUnsigned4.data
-    .sign()
+    .sign.withWallet()
     .complete();
   const collectPartialSignedHash4 = await collectPartialSigned4.submit();
 
