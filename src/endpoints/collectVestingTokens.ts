@@ -44,36 +44,30 @@ export const collectVestingTokens = async (
 
   const vestingTimeRemaining =
     datum.value.vestingPeriodEnd - BigInt(config.currentTime);
-  // console.log("vestingTimeRemaining", vestingTimeRemaining);
 
   const timeBetweenTwoInstallments = divCeil(
     BigInt(vestingPeriodLength),
     datum.value.totalInstallments
   );
-  // console.log("timeBetweenTwoInstallments", timeBetweenTwoInstallments);
 
   const futureInstallments = divCeil(
     vestingTimeRemaining,
     timeBetweenTwoInstallments
   );
-  // console.log("futureInstallments", futureInstallments);
 
   const expectedRemainingQty = divCeil(
     futureInstallments * datum.value.totalVestingQty,
     datum.value.totalInstallments
   );
-  // console.log("expectedRemainingQty", expectedRemainingQty);
 
   const vestingTokenUnit = datum.value.assetClass.symbol
     ? toUnit(datum.value.assetClass.symbol, datum.value.assetClass.name)
     : "lovelace";
-  // console.log("vestingTokenUnit", vestingTokenUnit)
 
   const vestingTokenAmount =
     vestingTimeRemaining < 0n
       ? vestingUTXO.assets[vestingTokenUnit]
       : vestingUTXO.assets[vestingTokenUnit] - expectedRemainingQty;
-  // console.log("vestingTokenAmount", vestingTokenAmount);
 
   const beneficiaryAddress = toAddress(datum.value.beneficiary, network);
 

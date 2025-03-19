@@ -37,7 +37,7 @@ export const lockTokens = async (
         name: config.vestingAsset.tokenName,
       },
       totalVestingQty: BigInt(
-        config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE
+        Math.floor(config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE)
       ),
       vestingPeriodStart: BigInt(config.vestingPeriodStart),
       vestingPeriodEnd: BigInt(config.vestingPeriodEnd),
@@ -64,7 +64,7 @@ export const lockTokens = async (
         { kind: "inline", value: datum },
         {
           [unit]: BigInt(
-            config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE
+            Math.floor(config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE)
           ),
         }
       )
@@ -75,7 +75,7 @@ export const lockTokens = async (
           keyHashToCredential(PROTOCOL_STAKE_KEY)
         ),
         {
-          [unit]: BigInt(config.totalVestingQty * PROTOCOL_FEE),
+          [unit]: BigInt(Math.ceil(config.totalVestingQty * PROTOCOL_FEE))
         }
       )
       .complete();
