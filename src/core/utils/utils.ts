@@ -25,7 +25,7 @@ export const utxosAtScript = async (
   script: string,
   stakeCredentialHash?: string
 ): Promise<UTxO[]> => {
-  const network = lucid.config().network;
+  const network = lucid.config().network ?? "Preview";
 
   const scriptValidator: SpendingValidator = {
     type: "PlutusV2",

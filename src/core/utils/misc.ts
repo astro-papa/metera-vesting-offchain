@@ -44,7 +44,7 @@ export async function getVestingByAddress(
   address: Address,
   script: CborHex
 ) {
-  const network = lucid.config().network;
+  const network = lucid.config().network ?? "Preview";
   const utxos = await parseUTxOsAtScript<VestingDatum>(
     lucid,
     script,

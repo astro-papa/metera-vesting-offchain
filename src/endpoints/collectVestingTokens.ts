@@ -15,7 +15,7 @@ export const collectVestingTokens = async (
   lucid: LucidEvolution,
   config: CollectPartialConfig
 ): Promise<Result<TxSignBuilder>> => {
-  const network = lucid.config().network;
+  const network = lucid.config().network ?? "Preview";
 
   config.currentTime ??= Date.now();
 

@@ -21,7 +21,7 @@ export const lockTokens = async (
   lucid: LucidEvolution,
   config: LockTokensConfig
 ): Promise<Result<TxSignBuilder>> => {
-  const network = lucid.config().network;
+  const network = lucid.config().network ?? "Preview";
 
   const vestingValidator: SpendingValidator = {
     type: "PlutusV2",
