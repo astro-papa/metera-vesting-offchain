@@ -1,6 +1,6 @@
 {
   "name": "@anastasia-labs/linear-vesting-offchain",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "https://docs.github.com/en/packages/quickstart",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
