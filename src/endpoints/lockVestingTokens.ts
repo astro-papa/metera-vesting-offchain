@@ -29,6 +29,8 @@ export const lockTokens = async (
   };
   const validatorAddress = validatorToAddress(network, vestingValidator);
 
+  const protocolFee = Math.ceil(config.totalVestingQty * PROTOCOL_FEE);
+  const totalVestingQty = config.totalVestingQty - protocolFee;
   const datum = Data.to(
     {
       beneficiary: fromAddress(config.beneficiary),
@@ -36,9 +38,7 @@ export const lockTokens = async (
         symbol: config.vestingAsset.policyId,
         name: config.vestingAsset.tokenName,
       },
-      totalVestingQty: BigInt(
-        Math.floor(config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE)
-      ),
+      totalVestingQty: BigInt(totalVestingQty),
       vestingPeriodStart: BigInt(config.vestingPeriodStart),
       vestingPeriodEnd: BigInt(config.vestingPeriodEnd),
       firstUnlockPossibleAfter: BigInt(config.firstUnlockPossibleAfter),
@@ -63,9 +63,7 @@ export const lockTokens = async (
         validatorAddress,
         { kind: "inline", value: datum },
         {
-          [unit]: BigInt(
-            Math.floor(config.totalVestingQty - config.totalVestingQty * PROTOCOL_FEE)
-          ),
+          [unit]: BigInt(totalVestingQty),
         }
       )
       .pay.ToAddress(
@@ -75,7 +73,7 @@ export const lockTokens = async (
           keyHashToCredential(PROTOCOL_STAKE_KEY)
         ),
         {
-          [unit]: BigInt(Math.ceil(config.totalVestingQty * PROTOCOL_FEE))
+          [unit]: BigInt(protocolFee)
         }
       )
       .complete();
