@@ -1,6 +1,6 @@
-# metera-vesting-offchain
-Basic Vesting Contracts - Metera Team
-# Vesting $METERA — versión sin comisiones ni dependencias
+# vesting-offchain
+Basic Vesting Contracts - APL
+# Vesting n$token — versión sin comisiones ni dependencias
 
 Este repositorio es un **fork modificado** del SDK original de Anastasia Labs (`linear-vesting-offchain`) con los siguientes objetivos:
 
